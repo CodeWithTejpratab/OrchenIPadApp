@@ -48,7 +48,7 @@ playground.xcworkspace
 # Carthage/Checkouts
 
 Carthage/Build/
-
+./Orchen/Orchen/GoogleService-Info.plist
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo.
