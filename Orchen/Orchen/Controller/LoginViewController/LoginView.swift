@@ -29,6 +29,7 @@ struct LoginView: View {
                     .autocapitalization(.none)
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(8)
+                    .keyboardType(.emailAddress)
                     .overlay(
                         LoginOverlayConfig(with: showOverlay)
                     )
@@ -41,6 +42,7 @@ struct LoginView: View {
                             eMessage: errorMessage)
                
             }
+            .colorScheme(.light)
             .frame(width: 450)
         }.onAppear() {
             isLoggedIn = loginManager.loginStatus()
