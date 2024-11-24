@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isLoggedIn: Bool = false
+    @State private var isLoggedIn: Bool = true
+    @StateObject private var studentManager = StudentManager()
     
     var body: some View {
         if !isLoggedIn {
             LoginView(isLoggedIn: $isLoggedIn)
         } else {
-            LoggedInView()
+            LoggedInView(studentManager: studentManager)
         }
     }
 }
 
 struct LoggedInView: View {
+    @StateObject var studentManager: StudentManager
+    
     var body: some View {
         ZStack {
             TabView {
@@ -29,7 +32,7 @@ struct LoggedInView: View {
                     }
                     .padding(.bottom, 10)
                 
-                HomeView()
+                HomeView(studentManager: studentManager)
                     .tabItem {
                         Image(systemName: "house.fill")
                     }
