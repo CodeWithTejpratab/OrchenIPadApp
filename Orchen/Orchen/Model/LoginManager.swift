@@ -9,7 +9,9 @@ import Foundation
 import FirebaseCore
 import FirebaseAuth
 
-struct LoginManager {
+class LoginManager {
+   
+    static var caller = LoginManager()
     
     func performLogin(with email: String, and password: String, errorHandler: @escaping (Error?) -> Bool) -> Bool {
         var onSuccess: Bool = false
@@ -20,7 +22,7 @@ struct LoginManager {
     }
     
     func loginStatus() -> Bool {
-        return Auth.auth().currentUser != nil ? true : false
+        return Auth.auth().currentUser != nil
     }
     
     func signOut(signOutError: @escaping (Error?) -> Void) {
@@ -31,4 +33,7 @@ struct LoginManager {
         }
     }
     
+    func getUserID() -> String {
+        Auth.auth().currentUser?.uid ?? ""
+    }
 }
