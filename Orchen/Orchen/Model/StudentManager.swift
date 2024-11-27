@@ -15,9 +15,11 @@ class StudentManager: ObservableObject {
         self.students.append(student)
     }
     
-    func search(for searchTerm: String) -> [StudentProfile] {
-        return searchTerm.isEmpty ? students : students.filter { student in student.name.localizedCaseInsensitiveContains(searchTerm)
+    func search(for searchTerm: String, shouldFilter: Bool) -> [StudentProfile] {
+        let filteredStudent = searchTerm.isEmpty ? students : students.filter { student in
+            student.name.localizedCaseInsensitiveContains(searchTerm)
         }
+        return shouldFilter ? filteredStudent.reversed() : filteredStudent
     }
     
 }

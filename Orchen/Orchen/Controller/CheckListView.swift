@@ -10,11 +10,8 @@ import SwiftUI
 
 struct CheckListView: View {
     var body: some View {
-        TabView {
-            ZStack {
-                BackgoundColor()
-                Text("hello this is the check list view")
-            }
+        ZStack {
+            Text("hello this is the check list view")
         }
     }
 }

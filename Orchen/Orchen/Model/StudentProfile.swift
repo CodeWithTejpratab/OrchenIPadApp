@@ -14,6 +14,14 @@ class StudentProfile: Identifiable {
     var credit: Int = 0
     var observations: [Observation] = []
     
+    init(studentID: Int, name: String, grade: String, credit: Int = 0, observations: [Observation] = []) {
+        self.studentID = studentID
+        self.name = name
+        self.grade = grade
+        self.credit = credit
+        self.observations = observations
+    }
+    
     func addObservation(observation: Observation) {
         observations.append(observation)
     }

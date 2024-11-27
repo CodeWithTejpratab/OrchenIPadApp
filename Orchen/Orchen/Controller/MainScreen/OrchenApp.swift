@@ -16,7 +16,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
-
 @main
 struct OrchenApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
