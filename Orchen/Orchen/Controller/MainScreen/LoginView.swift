@@ -14,7 +14,7 @@ struct LoginView: View {
     @State private var showingAlert = false
     @State private var showOverlay: Bool = false
     @Binding var isLoggedIn: Bool
-    
+    private let loginManager = LoginManager()
     var body: some View {
         ZStack {
             BackgoundColor()
@@ -38,12 +38,12 @@ struct LoginView: View {
                             showOverlay: $showOverlay,
                             buttonTapped: loginButtonTapped,
                             eMessage: errorMessage)
-               
+                
             }
             .colorScheme(.light)
             .frame(width: 450)
         }.onAppear() {
-            isLoggedIn = LoginManager.caller.loginStatus()
+            isLoggedIn = loginManager.loginStatus()
         }
         
     }
@@ -54,13 +54,14 @@ struct LoginView: View {
     }
     
     private func loginButtonTapped() {
-        isLoggedIn = LoginManager.caller.performLogin(with: username, and: password) { Error in
+        loginManager.performLogin(with: username, and: password) { Error in
             if let e = Error {
                 peformErrorAlert(error: e.localizedDescription)
-                return false
             } else {
                 showOverlay = false
-                return true
+                DispatchQueue.main.async {
+                    isLoggedIn = true
+                }
             }
         }
     }
