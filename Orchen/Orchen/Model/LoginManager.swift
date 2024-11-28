@@ -10,25 +10,27 @@ import FirebaseCore
 import FirebaseAuth
 
 struct LoginManager {
-    
-    func performLogin(with email: String, and password: String, errorHandler: @escaping (Error?) -> Bool) -> Bool {
-        var onSuccess: Bool = false
+   
+    func performLogin(with email: String, and password: String, errorHandler: @escaping (Error?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            onSuccess = errorHandler(error)
+             errorHandler(error)
         }
-        return onSuccess
     }
     
     func loginStatus() -> Bool {
-        return Auth.auth().currentUser != nil ? true : false
+        return Auth.auth().currentUser != nil
     }
     
-    func signOut(signOutError: @escaping (Error?) -> Void) {
+    func signOut(updateLogin: () -> Void) {
         do {
             try Auth.auth().signOut()
+            updateLogin()
         } catch {
-            signOutError(error)
+            print(error.localizedDescription)
         }
     }
     
+    func getUserID() -> String {
+        Auth.auth().currentUser?.uid ?? ""
+    }
 }

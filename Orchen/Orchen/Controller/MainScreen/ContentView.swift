@@ -9,17 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isLoggedIn: Bool = false
+    @StateObject private var studentManager = StudentManager()
     
     var body: some View {
         if !isLoggedIn {
             LoginView(isLoggedIn: $isLoggedIn)
         } else {
-            LoggedInView()
+            LoggedInView(studentManager: studentManager, isLoggedIn: $isLoggedIn)
         }
     }
 }
 
 struct LoggedInView: View {
+    @ObservedObject var studentManager: StudentManager
+    @Binding var isLoggedIn: Bool
+    
     var body: some View {
         ZStack {
             TabView {
@@ -27,22 +31,19 @@ struct LoggedInView: View {
                     .tabItem {
                         Image(systemName: "checklist")
                     }
-                    .padding(.bottom, 10)
                 
-                HomeView()
+                HomeView(studentManager: studentManager)
                     .tabItem {
                         Image(systemName: "house.fill")
                     }
-                    .padding(.bottom, 10)
                 
-                SettingView()
+                SettingView(isLoggedIn: $isLoggedIn)
                     .tabItem {
                         Image(systemName: "gearshape.fill")
                     }
-                    .padding(.bottom, 10)
             }
             .tint(.black)
-        }
+        }.colorScheme(.light)
     }
 }
 
