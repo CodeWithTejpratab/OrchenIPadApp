@@ -10,24 +10,87 @@ import SwiftUI
 
 struct SettingView: View {
     @Binding var isLoggedIn: Bool
+    
     private let loginManager = LoginManager()
+    
+    @State private var email: String = ""
+    @State private var displayName: String = ""
+    @State private var imageURL: URL?
+    
+    fileprivate func fetchUser() {
+        email = loginManager.email
+        displayName = loginManager.displayName
+        imageURL = loginManager.photoUrl
+    }
     
     var body: some View {
         ZStack {
-            Button {
-                loginManager.signOut {
-                    isLoggedIn = false
+            VStack(spacing: 20) {
+                ZStack {
+                    AsyncImage(url: imageURL) { phase in
+                        switch phase {
+                        case .empty:
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(.gray)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                        case .failure:
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(.red)
+                        @unknown default:
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(.gray)
+                        }
+                    }
                 }
-            } label: {
-                Text("Logout")
-                    .font(.system(size: 40))
-                    .tint(Color.white)
+                .frame(width: 200, height: 200)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(40)
+                .padding()
+                
+                Text(displayName)
+                    .font(.largeTitle)
                     .bold()
-                    .frame(width: 150, height: 150)
-                    .background(.green)
-                    .cornerRadius(20)
+                    .padding(.horizontal)
+                
+                Text(email)
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
+                
+                Button {
+                    loginManager.signOut {
+                        isLoggedIn = false
+                    }
+                } label: {
+                    Text("Logout")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: 200, minHeight: 50)
+                        .background(Color.green)
+                        .cornerRadius(10)
+                }
+                .padding()
             }
-        }.colorScheme(.light)
+            .padding(.top, 50)
+        }
+        .colorScheme(.light)
+        .onAppear {
+            fetchUser()
+        }
     }
 }
 

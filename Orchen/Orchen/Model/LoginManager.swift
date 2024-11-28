@@ -10,7 +10,18 @@ import FirebaseCore
 import FirebaseAuth
 
 struct LoginManager {
+  
+    var email: String {
+        Auth.auth().currentUser?.email ?? "example@gmail.com"
+    }
+    
+    var displayName: String {
+        Auth.auth().currentUser?.displayName ?? "Unknown User"
+    }
    
+    var photoUrl: URL? {
+        Auth.auth().currentUser?.photoURL
+    }
     func performLogin(with email: String, and password: String, errorHandler: @escaping (Error?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
              errorHandler(error)
