@@ -13,8 +13,11 @@ struct LoginView: View {
     @State private var errorMessage: String = ""
     @State private var showingAlert = false
     @State private var showOverlay: Bool = false
+    
     @Binding var isLoggedIn: Bool
+    
     private let loginManager = LoginManager()
+    
     var body: some View {
         ZStack {
             BackgoundColor()

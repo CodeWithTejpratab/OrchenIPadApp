@@ -16,32 +16,37 @@ struct ObservationView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack{
+            ZStack {
                 VStack {
-                    List (student.observations) { observation in
-                        NavigationLink {
-                            
-                        } label: {
-                            HStack {
-                                Text(observation.observationID)
-                                    .font(.system(size: 36))
-                                    .bold()
-                                    .lineLimit(1)
-                                    .foregroundColor(.indigo)
-                                Spacer()
-                                VStack(spacing: 10) {
-                                    Text(
-                                        observation.date.formatted(.dateTime
-                                            .day()
-                                            .month()
-                                            .year()
+                    List {
+                        ForEach(student.observations) { observation in
+                            NavigationLink {
+                                
+                            } label: {
+                                HStack {
+                                    Text(observation.observationID)
+                                        .font(.system(size: 36))
+                                        .bold()
+                                        .lineLimit(1)
+                                        .foregroundColor(.indigo)
+                                    Spacer()
+                                    VStack(spacing: 10) {
+                                        Text(
+                                            observation.date.formatted(.dateTime
+                                                .day()
+                                                .month()
+                                                .year()
+                                            )
                                         )
-                                    )
-                                    Text(student.name)
+                                        Text(student.name)
+                                    }
+                                    .padding()
                                 }
-                                .padding()
+                                .frame(height: 80)
                             }
-                            .frame(height: 80)
+                        }
+                        .onDelete { indexSet in
+                            student.deleteObservation(at: indexSet)
                         }
                     }
                 }

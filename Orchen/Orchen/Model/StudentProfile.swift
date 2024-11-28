@@ -26,6 +26,10 @@ class StudentProfile: Identifiable, ObservableObject {
         self.observations = observations
     }
     
+    func deleteObservation(at indexSet: IndexSet) {
+        observations.remove(atOffsets: indexSet)
+    }
+    
     func addObservation() {
         observations.append(Observation(observationID: "Observation \(observationCount)"))
     }
