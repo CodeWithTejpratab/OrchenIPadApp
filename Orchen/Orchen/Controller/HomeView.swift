@@ -38,7 +38,7 @@ struct HomeView: View {
                     
                     List(filteredStudents) { student in
                         NavigationLink {
-                            Text(student.name)
+                            ObservationView(for: student)
                         } label: {
                             HStack {
                                 Image(systemName: "person.crop.circle")

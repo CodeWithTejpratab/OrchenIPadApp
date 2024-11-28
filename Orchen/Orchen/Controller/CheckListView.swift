@@ -11,7 +11,9 @@ import SwiftUI
 struct CheckListView: View {
     var body: some View {
         ZStack {
-            Text("hello this is the check list view")
+            Text("If you want this to be completed plz pay Rahul. Speak to my lawyer Emil")
+                .bold()
+                .font(.largeTitle)
         }
     }
 }

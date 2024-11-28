@@ -7,54 +7,59 @@
 
 import Foundation
 
-class Observation: Identifiable {
-    var observationID: String
-    var sectionTitle: String
-    var date: Date
-    var item: [CheckListItem]
-    var additonalCriteria: [CustomCriteria]
-    
-    init(observationID: String, sectionTitle: String, date: Date, item: [CheckListItem], additionalCriteria: [CustomCriteria]) {
+class Observation: Identifiable, ObservableObject {
+    var id: String { observationID }
+    @Published var observationID: String
+    @Published var date: Date = Date()
+    @Published var item: [CheckListItem]
+    @Published var additionalCriteria: [CustomCriteria]
+
+    init(observationID: String, item: [CheckListItem] = [], additionalCriteria: [CustomCriteria] = []) {
         self.observationID = observationID
-        self.sectionTitle = sectionTitle
-        self.date = date
         self.item = item
-        self.additonalCriteria = additionalCriteria
+        self.additionalCriteria = additionalCriteria
     }
-    
-    class CheckListItem: Identifiable {
-        var description: String
-        var note: String
-        var rating: Number
-        
-        init(description: String, note: String, rating: Number) {
+
+    class CheckListItem: Identifiable, ObservableObject {
+        var id = UUID()
+        @Published var sectionTitle: String
+        @Published var description: String
+        @Published var note: String
+        @Published var rating: Rating
+
+        init(sectionTitle: String, description: String, note: String, rating: Rating) {
+            self.sectionTitle = sectionTitle
             self.description = description
             self.note = note
             self.rating = rating
         }
     }
-    
-    class CustomCriteria: Identifiable {
-        var name: String
-        var description: String
-        private var count: Int
-        
+
+    class CustomCriteria: Identifiable, ObservableObject {
+        var id = UUID()
+        @Published var name: String
+        @Published var description: String
+        @Published private(set) var count: Int
+
         init(name: String, description: String) {
             self.name = name
             self.description = description
             self.count = 0
         }
-        
+
         func increment() {
             count += 1
         }
-        
+
         func deincrement() {
             count -= 1
         }
     }
-    
-    enum Number {
-        case one, two, three, four
+
+    enum Rating: Int, CaseIterable {
+        case one = 1
+        case two
+        case three
+        case four
     }
 }

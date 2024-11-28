@@ -7,12 +7,16 @@
 
 import Foundation
 
-class StudentProfile: Identifiable {
-    var studentID: Int = 0
-    var name: String = ""
-    var grade: String = ""
-    var credit: Int = 0
-    var observations: [Observation] = []
+class StudentProfile: Identifiable, ObservableObject {
+    @Published var studentID: Int
+    @Published var name: String
+    @Published var grade: String
+    @Published var credit: Int
+    @Published var observations: [Observation]
+    
+    private var observationCount: Int {
+        observations.count + 1
+    }
     
     init(studentID: Int, name: String, grade: String, credit: Int = 0, observations: [Observation] = []) {
         self.studentID = studentID
@@ -22,8 +26,8 @@ class StudentProfile: Identifiable {
         self.observations = observations
     }
     
-    func addObservation(observation: Observation) {
-        observations.append(observation)
+    func addObservation() {
+        observations.append(Observation(observationID: "Observation \(observationCount)"))
     }
     
     func editProfile(name: String = "", grade: String = "") {
@@ -35,3 +39,4 @@ class StudentProfile: Identifiable {
         
     }
 }
+
