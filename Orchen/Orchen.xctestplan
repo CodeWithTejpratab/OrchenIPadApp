@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "15174F8A-D37D-412B-B236-BE3E6EA37B18",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Orchen.xcodeproj",
+      "identifier" : "8D53061E2CA7770000974FBC",
+      "name" : "Orchen"
+    }
+  },
+  "testTargets" : [
+    {
+      "enabled" : false,
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Orchen.xcodeproj",
+        "identifier" : "B98774C22CFA5C09007DBD60",
+        "name" : "Tests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Orchen.xcodeproj",
+        "identifier" : "B987750B2CFC0095007DBD60",
+        "name" : "OrchenTest"
+      }
+    }
+  ],
+  "version" : 1
+}
