@@ -21,7 +21,7 @@ struct ObservationView: View {
                     List {
                         ForEach(student.observations) { observation in
                             NavigationLink {
-                                
+                                CheckListEditView(observation: observation)
                             } label: {
                                 HStack {
                                     Text(observation.observationID)
