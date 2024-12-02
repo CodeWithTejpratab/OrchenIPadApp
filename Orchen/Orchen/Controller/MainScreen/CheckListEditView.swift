@@ -19,6 +19,7 @@ struct CheckListEditView: View {
                         .bold()
                         .padding()
                 }
+                
                 ForEach(observation.items) { item in
                     VStack(spacing: 0) {
                         Button(action: {
@@ -31,45 +32,76 @@ struct CheckListEditView: View {
                                     .font(.largeTitle)
                                     .foregroundColor(.black)
                                 Spacer()
+                                HStack {
+                                    Text("\(item.sectionLists.filter { $0.rating == .one }.count)")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.green)
+                                        .cornerRadius(20)
+                                    Text("\(item.sectionLists.filter { $0.rating == .two }.count)")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.yellow)
+                                        .cornerRadius(20)
+                                    Text("\(item.sectionLists.filter { $0.rating == .three }.count)")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.red)
+                                        .cornerRadius(20)
+                                    Text("\(item.sectionLists.filter { $0.rating == .four }.count)")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.black)
+                                        .cornerRadius(20)
+                                }
+                                .padding()
                                 Image(systemName: expandedItemID == item.id ? "chevron.up" : "chevron.down")
                                     .foregroundColor(.gray)
                             }
                             .padding()
-                            .frame(maxWidth: .infinity)
                             .background(Color(.systemGray5))
                             .cornerRadius(8)
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
                         }
                         
                         if expandedItemID == item.id {
-                            HStack {
-                                Text(item.description)
-                                    .font(.headline)
-                                    .bold()
-                                    .foregroundColor(.black)
-                                
-                                Button(action: {
-                                    activeNote = item.note
-                                    activeItemID = item.id
-                                    isPopupVisible = true
-                                }) {
+                            VStack(spacing: 10) {
+                                ForEach(item.sectionLists) { section in
                                     HStack {
-                                        Image(systemName: "message")
-                                    }
-                                    .padding(8)
-                                }
-                                .buttonStyle(BorderlessButtonStyle())
-                                
-                                HStack {
-                                    ForEach(colors, id: \.self) { color in
-                                        CheckboxView(color: color, isSelected: selectedColor == color) {
-                                            selectedColor = color
+                                        Text(section.description)
+                                            .font(.headline)
+                                            .bold()
+                                            .foregroundColor(.black)
+                                        
+                                        Button(action: {
+                                            activeNote = section.note
+                                            activeItemID = section.id
+                                            isPopupVisible = true
+                                        }) {
+                                            Image(systemName: "message")
                                         }
+                                        .padding(8)
+                                        .buttonStyle(BorderlessButtonStyle())
+                                        
+                                        HStack {
+                                            ForEach(colors, id: \.self) { color in
+                                                CheckboxView(
+                                                    color: color,
+                                                    isSelected: selectedColor == color
+                                                ) {
+                                                    selectedColor = color
+                                                    updateRating(for: section, color: color)
+                                                }
+                                            }
+                                        }
+                                        .padding()
                                     }
                                 }
-                                .padding()
                             }
-                            .frame(width: .infinity)
                             .padding()
                             .background(Color(.systemGray6))
                             .cornerRadius(8)
@@ -111,7 +143,7 @@ struct CheckListEditView: View {
         VStack {
             Spacer()
             AddButtonView({
-                
+                // Add button action here
             })
         }
         .padding(.bottom, 20)
@@ -119,13 +151,22 @@ struct CheckListEditView: View {
     
     private func saveNote() {
         if let id = activeItemID,
-           let item = observation.items.first(where: { $0.id == id }) {
-            item.note = activeNote
+           let section = observation.items.flatMap({ $0.sectionLists }).first(where: { $0.id == id }) {
+            section.note = activeNote
         }
         isPopupVisible = false
         activeItemID = nil
     }
     
+    private func updateRating(for section: SectionList, color: String) {
+        switch color {
+        case "Green": section.rating = .one
+        case "Yellow": section.rating = .two
+        case "Red": section.rating = .three
+        case "Black": section.rating = .four
+        default: break
+        }
+    }
 }
 
 struct CheckboxView: View {
@@ -134,13 +175,11 @@ struct CheckboxView: View {
     let action: () -> Void
     
     var body: some View {
-        HStack {
-            Image(systemName: isSelected ? "checkmark.square" : "square")
-                .foregroundColor(colorForName(color))
-                .onTapGesture {
-                    action()
-                }
-        }
+        Image(systemName: isSelected ? "checkmark.square" : "square")
+            .foregroundColor(colorForName(color))
+            .onTapGesture {
+                action()
+            }
     }
     
     private func colorForName(_ name: String) -> Color {
@@ -155,19 +194,25 @@ struct CheckboxView: View {
 }
 
 #Preview {
+    let sectionLists = [
+        SectionList(description: "The goals of the lesson are clearly communicated to the students.", note: "Sample Note", rating: .one),
+        SectionList(description: "The stated goal(s) and criteria for success are specific", note: "Another Note", rating: .two),
+        SectionList(description: "ST clearly explains the relevance of the stated goal to the students.", note: "Another Note", rating: .three)
+    ]
+    
     let sampleItems = [
         Observation.CheckListItem(
-            sectionTitle: "Section 1",
-            description: "This is a description for Section 1.",
-            note: "Some important note for Section 1.",
-            rating: .four
+            sectionTitle: "Identifying & Communicating Goals",
+            sectionLists: sectionLists
         ),
         Observation.CheckListItem(
-            sectionTitle: "Section 2",
-            description: "Details for Section 2.",
-            note: "Additional info about Section 2.",
-            rating: .four
-        )
+            sectionTitle: "Alignment",
+            sectionLists: []
+        ),
+        Observation.CheckListItem(
+            sectionTitle: "Teaching Procedures",
+            sectionLists: []
+        ),
     ]
     let observation = Observation(observationID: "Example Observation", items: sampleItems)
     

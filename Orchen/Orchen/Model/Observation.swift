@@ -14,7 +14,7 @@ class Observation: Identifiable, ObservableObject {
     @Published var items: [CheckListItem]
     @Published var additionalCriteria: [CustomCriteria]
     
-    init(observationID: String, items: [CheckListItem] = [], additionalCriteria: [CustomCriteria] = []) {
+    init(observationID: String, items: [CheckListItem] = sampleItems, additionalCriteria: [CustomCriteria] = []) {
         self.observationID = observationID
         self.items = items
         self.additionalCriteria = additionalCriteria
@@ -23,15 +23,11 @@ class Observation: Identifiable, ObservableObject {
     class CheckListItem: Identifiable, ObservableObject {
         var id = UUID()
         @Published var sectionTitle: String
-        @Published var description: String
-        @Published var note: String
-        @Published var rating: Rating
+        @Published var sectionLists: [SectionList]
         
-        init(sectionTitle: String, description: String, note: String, rating: Rating) {
+        init(sectionTitle: String, sectionLists: [SectionList]) {
             self.sectionTitle = sectionTitle
-            self.description = description
-            self.note = note
-            self.rating = rating
+            self.sectionLists = sectionLists
         }
     }
     
@@ -55,11 +51,45 @@ class Observation: Identifiable, ObservableObject {
             count -= 1
         }
     }
+}
+
+class SectionList: Identifiable, ObservableObject {
+    var id = UUID()
+    @Published var description: String
+    @Published var note: String
+    @Published var rating: Rating
     
-    enum Rating: Int, CaseIterable {
-        case one = 1
-        case two
-        case three
-        case four
+    init(description: String, note: String, rating: Rating) {
+        self.description = description
+        self.note = note
+        self.rating = rating
     }
 }
+
+enum Rating: Int, CaseIterable {
+    case one = 1
+    case two
+    case three
+    case four
+}
+
+let sectionLists = [
+    SectionList(description: "The goals of the lesson are clearly communicated to the students.", note: "Sample Note", rating: .one),
+    SectionList(description: "The stated goal(s) and criteria for success are specific", note: "Another Note", rating: .two),
+    SectionList(description: "ST clearly explains the relevance of the stated goal to the students.", note: "Another Note", rating: .three)
+]
+
+let sampleItems = [
+    Observation.CheckListItem(
+        sectionTitle: "Identifying & Communicating Goals",
+        sectionLists: sectionLists
+    ),
+    Observation.CheckListItem(
+        sectionTitle: "Alignment",
+        sectionLists: []
+    ),
+    Observation.CheckListItem(
+        sectionTitle: "Teaching Procedures",
+        sectionLists: []
+    ),
+]
