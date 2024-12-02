@@ -27,6 +27,10 @@ class Observation: Identifiable, ObservableObject {
         }
     }
     
+    func updateItem(_ item: CheckListItem) {
+            objectWillChange.send()
+        }
+    
     class CheckListItem: Identifiable, ObservableObject {
         var id = UUID()
         @Published var sectionTitle: String
