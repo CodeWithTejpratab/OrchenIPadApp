@@ -1,10 +1,3 @@
-//
-//  Observation.swift
-//  Orchen
-//
-//  Created by Rahul Ramjeawon on 11/22/24.
-//
-
 import Foundation
 
 class Observation: Identifiable, ObservableObject {
@@ -18,6 +11,20 @@ class Observation: Identifiable, ObservableObject {
         self.observationID = observationID
         self.items = items
         self.additionalCriteria = additionalCriteria
+    }
+    
+    func addChecklistItem(title: String) {
+        guard !title.isEmpty else { return }
+        let newItem = CheckListItem(sectionTitle: title, sectionLists: [])
+        items.append(newItem)
+    }
+    
+    func addSection(to item: CheckListItem, description: String) {
+        guard !description.isEmpty else { return }
+        let newSection = SectionList(description: description, note: "", rating: nil)
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items[index].sectionLists.append(newSection)
+        }
     }
     
     class CheckListItem: Identifiable, ObservableObject {
@@ -57,9 +64,9 @@ class SectionList: Identifiable, ObservableObject {
     var id = UUID()
     @Published var description: String
     @Published var note: String
-    @Published var rating: Rating
+    @Published var rating: Rating?
     
-    init(description: String, note: String, rating: Rating) {
+    init(description: String, note: String, rating: Rating?) {
         self.description = description
         self.note = note
         self.rating = rating
@@ -74,9 +81,9 @@ enum Rating: Int, CaseIterable {
 }
 
 let sectionLists = [
-    SectionList(description: "The goals of the lesson are clearly communicated to the students.", note: "Sample Note", rating: .one),
-    SectionList(description: "The stated goal(s) and criteria for success are specific", note: "Another Note", rating: .two),
-    SectionList(description: "ST clearly explains the relevance of the stated goal to the students.", note: "Another Note", rating: .three)
+    SectionList(description: "The goals of the lesson are clearly communicated to the students.", note: "League is dead", rating: nil),
+    SectionList(description: "The stated goal(s) and criteria for success are specific", note: "An egg inside of an egg means the egg came first", rating: nil),
+    SectionList(description: "ST clearly explains the relevance of the stated goal to the students.", note: "Dr. Arafat best man", rating: nil)
 ]
 
 let sampleItems = [
