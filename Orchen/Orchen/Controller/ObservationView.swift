@@ -7,22 +7,21 @@ struct ObservationView: View {
     @State private var editedGrade: String = ""
     @State private var editedCredit: String = ""
     @State private var editedNotes: String = ""
-
+    
     init(for student: StudentProfile) {
         self.student = student
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
-                    // Profile Section
                     VStack(spacing: 20) {
                         Image(systemName: "person.crop.circle")
                             .resizable()
                             .frame(width: 100, height: 100)
                             .padding()
-
+                        
                         if isEditing {
                             TextField("Name", text: $editedName)
                                 .font(.title)
@@ -30,20 +29,20 @@ struct ObservationView: View {
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(8)
-
+                            
                             TextField("Grade", text: $editedGrade)
                                 .font(.body)
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(8)
-
+                            
                             TextField("Credits", text: $editedCredit)
                                 .font(.body)
                                 .keyboardType(.numberPad)
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(8)
-
+                            
                             TextField("Notes", text: $editedNotes)
                                 .font(.body)
                                 .padding()
@@ -53,24 +52,23 @@ struct ObservationView: View {
                             Text(student.name)
                                 .font(.title)
                                 .bold()
-
+                            
                             Text("Grade: \(student.grade)")
                                 .font(.body)
-
+                            
                             Text("Credits: \(student.credit)")
                                 .font(.body)
-
+                            
                             Text("Notes: \(editedNotes.isEmpty ? "No notes available" : editedNotes)")
                                 .font(.body)
                                 .italic()
                         }
                     }
                     .padding()
-
+                    
                     Divider()
                         .padding(.horizontal)
-
-                    // Observations Section
+                    
                     VStack {
                         List {
                             ForEach(student.observations) { observation in
@@ -104,10 +102,10 @@ struct ObservationView: View {
                             }
                         }
                     }
-
+                    
                     Spacer()
                 }
-
+                
                 VStack {
                     Spacer()
                     AddButtonView({
