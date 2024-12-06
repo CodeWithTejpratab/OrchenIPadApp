@@ -20,7 +20,7 @@ class Observation: Identifiable, ObservableObject {
     }
     
     func addSection(to item: CheckListItem, description: String) {
-        guard !description.isEmpty else { return }
+        if description.isEmpty { return }
         let newSection = SectionList(description: description, note: "", rating: nil)
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             items[index].sectionLists.append(newSection)
@@ -28,8 +28,8 @@ class Observation: Identifiable, ObservableObject {
     }
     
     func updateItem(_ item: CheckListItem) {
-            objectWillChange.send()
-        }
+        objectWillChange.send()
+    }
     
     class CheckListItem: Identifiable, ObservableObject {
         var id = UUID()

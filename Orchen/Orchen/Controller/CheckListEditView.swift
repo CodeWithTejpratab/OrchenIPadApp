@@ -1,15 +1,5 @@
 import SwiftUI
 
-func ratingForColor(_ color: String) -> Rating {
-    switch color {
-    case "Green": return .one
-    case "Yellow": return .two
-    case "Red": return .three
-    case "Black": return .four
-    default: return .one
-    }
-}
-
 struct CheckListEditView: View {
     @ObservedObject var observation: Observation
     @State private var expandedItemID: UUID?
@@ -18,12 +8,11 @@ struct CheckListEditView: View {
     @State private var activeItemID: UUID?
     @State private var newSectionTitle: String = ""
     @State private var newSectionDescription: String = ""
-
+    
     let colors: [String] = ["Green", "Yellow", "Red", "Black"]
-
+    
     var body: some View {
         VStack(spacing: 10) {
-            // Header
             HStack {
                 Text(observation.observationID)
                     .font(.system(size: 40))
@@ -31,7 +20,6 @@ struct CheckListEditView: View {
                     .padding()
             }
             
-            // Checklist Items
             ForEach(observation.items) { item in
                 VStack(spacing: 0) {
                     Button(action: {
@@ -43,6 +31,7 @@ struct CheckListEditView: View {
                             Text(item.sectionTitle)
                                 .font(.largeTitle)
                                 .foregroundColor(.black)
+                            
                             Spacer()
                             
                             HStack {
@@ -81,7 +70,6 @@ struct CheckListEditView: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
                     }
                     
-                    // Expanded Checklist Section
                     if expandedItemID == item.id {
                         VStack(spacing: 10) {
                             ForEach(item.sectionLists) { section in
@@ -91,7 +79,7 @@ struct CheckListEditView: View {
                                         .bold()
                                         .foregroundColor(.black)
                                         .frame(maxWidth: .infinity, alignment: .leading)
-
+                                    
                                     Button(action: {
                                         activeNote = section.note
                                         activeItemID = section.id
@@ -116,14 +104,11 @@ struct CheckListEditView: View {
                                     .padding()
                                 }
                             }
-
                             
-                            // Add New Section Item
                             HStack {
                                 TextField("New Section Description", text: $newSectionDescription)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                 Button("Add") {
-                                    
                                     observation.addSection(to: item, description: newSectionDescription)
                                     newSectionDescription = ""
                                 }
@@ -143,46 +128,7 @@ struct CheckListEditView: View {
             
             Spacer()
                 .padding()
-                .overlay(
-                    ZStack {
-                        if isPopupVisible {
-                            Color.black.opacity(0.0)
-                                .ignoresSafeArea()
-                                .onTapGesture {
-                                    saveNote()
-                                }
-                            
-                            VStack(spacing: 10) {
-                                Text("Edit Note")
-                                    .font(.headline)
-                                    .padding(.bottom, 10)
-                                    .padding(.top, 10)
-                                TextEditor(text: $activeNote)
-                                    .frame(height: 150)
-                                    .cornerRadius(8)
-                                    .border(Color.gray, width: 1)
-                                    .padding()
-                                Button("Save") {
-                                    saveNote()
-                                }
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
-                            }
-                            .padding(20)
-                            .frame(width: 400, height: 300) // Larger popup dimensions
-                            .background(Color.white)
-                            .cornerRadius(16)
-                            .shadow(radius: 10)
-                        }
-                    }
-                )
-
             
-
-
-            // Add New Checklist Section
             VStack {
                 HStack {
                     TextField("New Checklist Section Title", text: $newSectionTitle)
@@ -200,16 +146,49 @@ struct CheckListEditView: View {
             }
         }
         .padding()
+        .overlay(ZStack {
+            if isPopupVisible {
+                Color.black.opacity(0.0)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        saveNote()
+                    }
+                
+                VStack(spacing: 10) {
+                    Text("Edit Note")
+                        .font(.headline)
+                        .padding(.bottom, 10)
+                        .padding(.top, 10)
+                    TextEditor(text: $activeNote)
+                        .frame(height: 150)
+                        .cornerRadius(8)
+                        .border(Color.gray, width: 1)
+                        .padding()
+                    Button("Save") {
+                        saveNote()
+                    }
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                }
+                .padding(20)
+                .frame(width: 400, height: 300)
+                .background(Color.white)
+                .cornerRadius(16)
+                .shadow(radius: 10)
+            }
+        })
     }
     
     private func saveNote() {
-          if let id = activeItemID,
-             let section = observation.items.flatMap({ $0.sectionLists }).first(where: { $0.id == id }) {
-              section.note = activeNote
-          }
-          isPopupVisible = false
-          activeItemID = nil
-      }
+        if let id = activeItemID,
+           let section = observation.items.flatMap({ $0.sectionLists }).first(where: { $0.id == id }) {
+            section.note = activeNote
+        }
+        isPopupVisible = false
+        activeItemID = nil
+    }
     
     private func updateRating(for section: SectionList, color: String) {
         section.rating = ratingForColor(color)
@@ -217,12 +196,11 @@ struct CheckListEditView: View {
     
 }
 
-
 struct CheckboxView: View {
     let color: String
     let isSelected: Bool
     let action: () -> Void
-
+    
     var body: some View {
         Image(systemName: isSelected ? "checkmark.square.fill" : "square")
             .foregroundColor(colorForName(color))
@@ -230,7 +208,7 @@ struct CheckboxView: View {
                 action()
             }
     }
-
+    
     private func colorForName(_ name: String) -> Color {
         switch name {
         case "Green": return .green
@@ -242,7 +220,15 @@ struct CheckboxView: View {
     }
 }
 
-
+func ratingForColor(_ color: String) -> Rating {
+    switch color {
+    case "Green": return .one
+    case "Yellow": return .two
+    case "Red": return .three
+    case "Black": return .four
+    default: return .one
+    }
+}
 
 #Preview {
     let sectionLists = [
